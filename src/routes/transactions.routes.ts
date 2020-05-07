@@ -47,9 +47,9 @@ transactionsRouter.post(
     const { file: fileProperties } = request;
 
     const importTransaction = new ImportTransactionsService();
-    await importTransaction.execute(fileProperties.path);
+    const transactions = await importTransaction.execute(fileProperties.path);
 
-    return response.status(204).send();
+    return response.json(transactions);
   },
 );
 
