@@ -27,7 +27,7 @@ class ImportTransactionsService {
     const transactions: TransactionCSVData[] = [];
     const categories: string[] = [];
 
-    parseCSV.on('data', line => {
+    parseCSV.on('data', async line => {
       // eslint-disable-next-line no-console
       const [title, type, value, category] = line;
 
@@ -43,6 +43,11 @@ class ImportTransactionsService {
       });
     });
 
+    /*  É necessario utilizar uma promise para que os codigos subsequentes possam ser
+    chamados. Essa promise informa que a mesma vai ser resolvida quando o evento 'end'
+    for chamado, ou seja, quando todas as linhas forem lidas do nosso stream do
+    arquivo csv; isso força que seja necessário esperar todo o processamento para
+    seguirmos com a logica posterior */
     await new Promise(resolve => parseCSV.on('end', resolve));
 
     // Logica de regra de negocio para inserir no banco
